@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { openAddExpenseModal, openAddGroupModal,closeAddGroupModal,closeAddExpenseModal} from '../features/modal/modalSlice'
 import AddGroupModal from './modals/AddGroupModal'
 import AddExpenseModal from './modals/AddExpenseModal'
+import {DeleteExpense} from '../features/expenseSlice'
 
 
 const Dashboard = () => {
@@ -11,7 +12,8 @@ const Dashboard = () => {
   const dispatch = useDispatch()
   const group = useSelector((state)=>state.group.group)
   const expenses = useSelector((state)=>state.expense.expense)
-
+  console.log(expenses);
+  
   const {showAddGroupModal,showAddExpenseModal} = useSelector((state)=>state.modal)
 
 
@@ -67,6 +69,12 @@ const Dashboard = () => {
                   <div className="text-sm text-gray-600">Group: {exp.groupId}</div>
                   <div className="text-sm text-gray-600">Amount: ₹{exp.amount}</div>
                   <div className="text-sm text-gray-500">Date: {new Date(exp.date).toLocaleDateString()}</div>
+                  <button
+                  onClick={() => dispatch(DeleteExpense(exp.id))}
+                  className="mt-2 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition text-sm"
+                  >
+                  Delete
+                  </button>
                 </li>
               )
             })}
