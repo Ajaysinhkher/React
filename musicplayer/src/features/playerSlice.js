@@ -6,7 +6,6 @@ const initialState = {
     currentId: null,
     isPlaying: false,
     toggleButton:false,
-
 }
 
 const playerSlice = createSlice({

@@ -10,8 +10,6 @@ import User from './components/User/User.jsx'
 import Github,{githubInfoLoader}  from './components/Github/Github.jsx'
 import './App.css'
 
-
-
 // making a router using createBrowserRouter method :
 const router = createBrowserRouter([
   {
@@ -32,7 +30,6 @@ const router = createBrowserRouter([
   },
  
 ]);
-
 
 
 createRoot(document.getElementById('root')).render(

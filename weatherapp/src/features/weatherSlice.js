@@ -4,13 +4,12 @@ import {createSlice,createAsyncThunk} from '@reduxjs/toolkit'
 const API_KEY = '2426dab20b76e15f23909df3f711cbb5';
 
 // creating a const function to fetch data from third party api using asyncthunk
-export const fetchWeather = createAsyncThunk('weather/ftechWeather',
+export const fetchWeather = createAsyncThunk('weather/fetchWeather',
     async(params, thunkAPI)=>{
 
     //   console.log(params);
       
-
-        try{
+          try{
             let url = '';
 
             if (params.lat && params.lon) {

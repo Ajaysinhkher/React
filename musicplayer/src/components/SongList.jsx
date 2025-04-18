@@ -2,12 +2,13 @@ import React from "react";
 import {useSelector} from 'react-redux'
 import SongCard from './SongCard'
 import MusicPlayer from './MusicPlayer';
+import Playlist from "./Playlist";
 
 
 const SongList = ()=>{
     
    
-    const {isPlaying,songs,currentId}  = useSelector((state)=>state.player)
+    const {songs,currentId}  = useSelector((state)=>state.player)
     // console.log(currentId);
     
     return (
@@ -17,6 +18,9 @@ const SongList = ()=>{
       ))}
 
     {currentId !==null ? <MusicPlayer id={currentId}/>:''}
+
+    {/* proivde the condition to render the playlist component  */}
+    <Playlist/>
     </div>
    
 

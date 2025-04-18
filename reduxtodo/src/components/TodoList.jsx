@@ -5,7 +5,7 @@ import TodoItem from "./TodoItem";
 const TodoList = () => {
   // Get todos from Redux store
   const todos = useSelector((state) => state.todos);
-  console.log("todos", todos);
+  // console.log("todos", todos);
   
 
 

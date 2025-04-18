@@ -19,7 +19,6 @@ const MusicPlayer = ({ id }) => {
 
 
 //   functions to handle the next song and prev song :
-
 const playNext = ()=>{
     dispatch(nextPlay());
 }
@@ -29,7 +28,7 @@ const playPrev = ()=>{
 }
 
 
-//need to handle the audio husing useRef and html <ausio element>
+//need to handle the audio husing useRef and html <audio element>
 // use useEffect to change the audio play/pause based on togglebutton action:
 
 useEffect(()=>{
@@ -76,7 +75,7 @@ useEffect(()=>{
         <button onClick = {playNext} className="hover:text-gray-400">⏭️</button>
 
         <audio controls ref={audioRef} src={song.src} />
-      </div>
+      </div> 
     </div>
   );
 };
