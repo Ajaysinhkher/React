@@ -1,7 +1,5 @@
 import { createSlice,createAsyncThunk  } from "@reduxjs/toolkit";
 import axios from 'axios';
-import songs from '../data/song';
-import { Children } from "react";
 
 const API_URL = "https://6801e29781c7e9fbcc439ddd.mockapi.io/Playlists"
 
@@ -9,7 +7,8 @@ const initialState = {
     playlists: [],
     showForm:false,
     selectedPlaylist:'',
-    newPlaylistName:',',
+    selectedSongId:null,
+    newPlaylistName:'',
     loading: false,
     error: null,
 };
@@ -37,16 +36,58 @@ export const createPlaylist = createAsyncThunk('playlists/createPlaylist',
         // console.log(newplaylist);
         
         try{
-            console.log("playlistdata",playlistData);
+            // console.log("playlistdata",playlistData);
             
             const response = await axios.post(API_URL,newplaylist);
 
-            console.log(response.data);
+            // console.log(response.data);
             return response.data;
             
         }catch(error){
             return thunkAPI.rejectWithValue(error.message)
         }
+    }
+)
+
+
+export const addtoExistingPlaylist = createAsyncThunk('playlists/addtoExistingPlaylist',
+    async({playlistId,songId},thunkAPI)=>{
+
+        try{
+
+            const state = thunkAPI.getState();
+            const playlist  = state.playlists.playlists.find((p)=>p.id === playlistId);
+            // console.log("selected playlist is :",playlist);
+
+            if(!playlist)
+            {
+                throw error
+            }
+
+            const updatedSongs = playlist.songs.includes(songId)
+            ? playlist.songs
+            : [...playlist.songs, songId];
+
+            // console.log(updatedSongs);
+            
+            const response = await axios.put(`${API_URL}/${playlistId}`, {
+                ...playlist,
+                songs: updatedSongs
+        });
+
+        return response.data;
+
+    }catch (error) {
+        return thunkAPI.rejectWithValue(error.message);
+    }
+ }
+);
+
+
+export const deletePlaylist = createAsyncThunk('playlists/deletePlaylist',
+    async (playlistId, thunkAPI) => {
+        await axios.delete(`${API_URL}/${playlistId}`);
+        return playlistId;
     }
 )
 
@@ -67,10 +108,15 @@ const playlistSlice = createSlice({
           },
         setSelectedPlaylist: (state, action) => {
             state.selectedPlaylist = action.payload;
+            // console.log(state.selectedPlaylist);
+            
         },
         setNewPlaylistName: (state, action) => {
             state.newPlaylistName = action.payload;
-          },
+        },
+        setSelectedSongId: (state, action) => {
+            state.selectedSongId = action.payload;   
+        },
     },
 
     extraReducers:(builder)=>{
@@ -99,10 +145,31 @@ const playlistSlice = createSlice({
           .addCase(createPlaylist.rejected, (state, action) => {
             state.error = action.payload;
             state.loading = false;
+          })
+          .addCase(addtoExistingPlaylist.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+          })
+          .addCase(addtoExistingPlaylist.fulfilled, (state, action) => {
+            const updated = action.payload;
+            const index = state.playlists.findIndex(p => p.id === updated.id);
+            if (index !== -1) {
+              state.playlists[index] = updated;
+            }
+            state.loading = false;
+          })
+          .addCase(addtoExistingPlaylist.rejected, (state, action) => {
+            state.error = action.payload;
+            state.loading = false;
+          })
+          .addCase(deletePlaylist.fulfilled, (state, action) => {
+            state.playlists = state.playlists.filter(
+              (p) => p.id !== action.payload
+            );
           });
     }
 
 });
 
-export const { openPlaylistForm,setSelectedPlaylist ,setNewPlaylistName,closePlaylistForm} = playlistSlice.actions;
+export const { openPlaylistForm,setSelectedPlaylist ,setNewPlaylistName,closePlaylistForm,setSelectedSongId} = playlistSlice.actions;
 export default playlistSlice.reducer;

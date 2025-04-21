@@ -6,22 +6,24 @@ import {
   setSelectedPlaylist,
   setNewPlaylistName,
   closePlaylistForm,
-  fetchPlaylists,
   createPlaylist,
+  setSelectedSongId ,
+  addtoExistingPlaylist,
 } from "../features/playlistSlice";
 
 
 const SongCard = ({ song }) => {
+
+  // console.log(song);
+  
   const dispatch = useDispatch();
 
   // UI states
   const [showOptions, setShowOptions] = useState(false);
-  const { showForm, selectedPlaylist, newPlaylistName, playlists } =
-    useSelector((state) => state.playlists);
+  const { showForm, selectedPlaylist, newPlaylistName, playlists,selectedSongId} = useSelector((state) => state.playlists);
 
-  // fetch api  from api:
-  let existingPlaylists = [];
-  existingPlaylists = playlists; //playlists is an object stored in an array
+
+  let existingPlaylists = playlists; //playlists is an object stored in an array
   // console.log("existingPlaylist:", existingPlaylists);
 
   // manage states for musicplayer
@@ -31,36 +33,39 @@ const SongCard = ({ song }) => {
 
   const handleMoreClick = (e) => {
     e.stopPropagation();
-    // console.log("add to cart",showOptions);
     setShowOptions((prev) => !prev);
-    // console.log(showOptions);
   };
 
-  // console.log(showOptions);
+
   const handleAddToPlaylist = (e) => {
     e.stopPropagation();
     setShowOptions(false);
+    dispatch(setSelectedSongId(song.id));
     dispatch(openPlaylistForm());
-    // console.log(showForm);
+
   };
 
   const handleConfirmAdd = (e) => {
+    e.preventDefault()
     e.stopPropagation();
-    // const playlistToUse = newPlaylistName.trim() || selectedPlaylist;
-    const id = song.id;
-    
+    const id = selectedSongId;   
     if (newPlaylistName.trim()) {
-      console.log("inside newplay");
+   
       dispatch(createPlaylist({newPlaylistName,id}));
       dispatch(closePlaylistForm());
     }
     else{
-
-      // dispatch()
+      const playlist = playlists.find((p)=>p.name === selectedPlaylist);
+      console.log("the selected playlist is :", playlist.id);
+      if(playlist && id)
+      {
+        dispatch(addtoExistingPlaylist({ playlistId: playlist.id, songId: id }));
+        console.log("song added id",song.id);
+      }
     }
-    
 
     // Reset
+    dispatch(setSelectedSongId(null));
     setSelectedPlaylist("");
     setNewPlaylistName("");
     dispatch(closePlaylistForm());
@@ -68,6 +73,7 @@ const SongCard = ({ song }) => {
 
   const closeModal = () => {
     dispatch(closePlaylistForm());
+    dispatch(setSelectedSongId(null));
     setSelectedPlaylist("");
     setNewPlaylistName("");
     setShowOptions(false);
@@ -75,11 +81,9 @@ const SongCard = ({ song }) => {
 
   return (
     <>
-      {/* Main Song Card */}
-      <div
-        onClick={handleClick}
-        className="relative cursor-pointer w-44 m-4 text-center bg-white shadow-md rounded-xl p-3 transition hover:shadow-lg"
-      >
+      {/* Main Song Card  play song */}
+      <div onClick={handleClick} className="relative cursor-pointer w-44 m-4 text-center bg-white shadow-md rounded-xl p-3 transition hover:shadow-lg">
+
         {/* More Button */}
         <div className="absolute top-2 right-2" onClick={handleMoreClick}>
           <button className="text-gray-600 text-lg font-bold px-2 hover:text-black">
