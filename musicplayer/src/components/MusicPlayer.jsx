@@ -16,8 +16,6 @@ const MusicPlayer = ({ id }) => {
     dispatch(togglePlay());
   };
 
-
-
 //   functions to handle the next song and prev song :
 const playNext = ()=>{
     dispatch(nextPlay());
@@ -28,9 +26,8 @@ const playPrev = ()=>{
 }
 
 
-//need to handle the audio husing useRef and html <audio element>
+//need to handle the audio using useRef and html <audio element>
 // use useEffect to change the audio play/pause based on togglebutton action:
-
 useEffect(()=>{
     if (!audioRef.current) 
         {
@@ -44,8 +41,6 @@ useEffect(()=>{
         audioRef.current.pause();
       }
 },[toggleButton,song?.src])
-
-
 
 
   return (

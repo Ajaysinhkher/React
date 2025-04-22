@@ -16,7 +16,7 @@ const playerSlice = createSlice({
           state.currentId = action.payload,
           state.isPlaying = true,
           state.toggleButton = true;
-        console.log(state.toggleButton);     
+          // console.log(state.toggleButton);     
         },
 
         togglePlay:(state)=>{

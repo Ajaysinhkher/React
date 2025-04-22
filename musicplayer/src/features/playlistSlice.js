@@ -21,6 +21,7 @@ export const fetchPlaylists  = createAsyncThunk('playlists/fetchPalaylists',
             return response.data;
 
         }catch(error){
+            
             return thunkAPI.rejectWithValue(error.message)
         }
     }
@@ -78,6 +79,8 @@ export const addtoExistingPlaylist = createAsyncThunk('playlists/addtoExistingPl
         return response.data;
 
     }catch (error) {
+
+    
         return thunkAPI.rejectWithValue(error.message);
     }
  }
@@ -126,10 +129,11 @@ const playlistSlice = createSlice({
             state.error = null;
         })
         .addCase(fetchPlaylists.fulfilled,(state,action)=>{
+            state.loading = false;
             state.playlists = action.payload;
         })
         .addCase(fetchPlaylists.rejected,(state,action)=>{
-            state.error = action.payload;
+            state.error = action.payload || 'failed to fetch the playlist';
             state.loading = false;
         })
 

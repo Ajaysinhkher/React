@@ -34,6 +34,7 @@ const songs = [
       src: "/songs/song5.mp3",
       cover: "/covers/cover5.jpg",
   },
+
 ];
 export default songs;
 
